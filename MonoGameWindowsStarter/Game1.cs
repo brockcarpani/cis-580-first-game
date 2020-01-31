@@ -84,9 +84,8 @@ namespace MonoGameWindowsStarter
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
-        { 
-            var keyboardState = Keyboard.GetState();
-            newKeyboardState = keyboardState;
+        {
+            newKeyboardState = Keyboard.GetState();
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
