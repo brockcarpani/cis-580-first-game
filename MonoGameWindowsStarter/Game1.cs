@@ -16,9 +16,7 @@ namespace MonoGameWindowsStarter
         Random random = new Random();
         Vector2 ballPosition = Vector2.Zero;
         Vector2 ballVelocty;
-        Texture2D paddle;
-        Rectangle paddleRect;
-        int paddleSpeed = 0;
+        Paddle paddle;
         KeyboardState oldKeyboardState;
         KeyboardState newKeyboardState;
 
@@ -26,6 +24,7 @@ namespace MonoGameWindowsStarter
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            paddle = new Paddle(this);
         }
 
         /// <summary>
@@ -47,11 +46,6 @@ namespace MonoGameWindowsStarter
             );
             ballVelocty.Normalize();
 
-            paddleRect.X = 0;
-            paddleRect.Y = 0;
-            paddleRect.Width = 50;
-            paddleRect.Height = 250;
-
             base.Initialize();
         }
 
@@ -66,7 +60,7 @@ namespace MonoGameWindowsStarter
 
             // TODO: use this.Content to load your game content here
             ball = Content.Load<Texture2D>("ball");
-            paddle = Content.Load<Texture2D>("pixel");
+            paddle.LoadContent(Content);
         }
 
         /// <summary>
@@ -94,17 +88,7 @@ namespace MonoGameWindowsStarter
                 Exit();
 
             // Paddle keyboard logic
-            paddleRect.Y += paddleSpeed;
-            if (newKeyboardState.IsKeyDown(Keys.Up) && !oldKeyboardState.IsKeyDown(Keys.Up))
-            {
-                paddleSpeed -= 1;
-            }
-            if (newKeyboardState.IsKeyDown(Keys.Down) && !oldKeyboardState.IsKeyDown(Keys.Down))
-            {
-                paddleSpeed += 1;
-            }
-            if (paddleRect.Y < 0) paddleRect.Y = 0;
-            if (paddleRect.Y > GraphicsDevice.Viewport.Height - paddleRect.Height) paddleRect.Y = GraphicsDevice.Viewport.Height - paddleRect.Height;
+            paddle.Update(gameTime);
 
 
             // TODO: Add your update logic here
@@ -155,7 +139,7 @@ namespace MonoGameWindowsStarter
             // TODO: Add your drawing code here
             spriteBatch.Begin();
             spriteBatch.Draw(ball, new Rectangle((int)ballPosition.X, (int)ballPosition.Y, 100, 100), Color.White);
-            spriteBatch.Draw(paddle, paddleRect, Color.Red);
+            paddle.Draw(spriteBatch);
             spriteBatch.End();
 
             base.Draw(gameTime);
